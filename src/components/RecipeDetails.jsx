@@ -3,11 +3,11 @@ import { useLocation } from "react-router-dom";
 
 const RecipeDetails = () => {
   const location = useLocation();
-  const { recipe } = location.state || {};
+  const { recipe, bg } = location.state || {};
   return (
     <>
       <div className="flex w-full flex-col gap-4 p-10 items-center">
-        <div className="flex flex-col rounded-md bg-[#ecf7d4] overflow-hidden p-3 relative items-center">
+        <div className={`flex flex-col rounded-md ${bg} overflow-hidden p-3 relative items-center`}>
           <div className="flex items-center gap-4 flex-col">
             <div className="flex flex-col gap-4 p-5">
               <div className="h-full w-full">
@@ -27,7 +27,7 @@ const RecipeDetails = () => {
               <p className="font-bold tracking-wide">{recipe.description}</p>
             </div>
           </div>
-          <div className="h-25 w-full flex flex-col rounded-md p-5">
+          <div className="h-25 w-full flex flex-col rounded-md p-5 items">
             <div className="h-full w-full">
               <p className="font-bold tracking-wide">Step by step</p>
               {recipe.instructions.map((steps) => {

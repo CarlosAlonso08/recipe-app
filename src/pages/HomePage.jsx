@@ -1,28 +1,19 @@
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
+import { getRandomColor } from "../lib/utils";
+import { recipe_url, recipeOptions } from "../api/api";
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchRecipes = async (searchQuery) => {
-    //setLoading(true);
+    setLoading(true);
     setRecipes([]);
     try {
-      const options = {
-        method: "GET",
-        headers: {
-          "x-rapidapi-key":
-            "544455fc47msh94d8e341dfb92cbp11feb1jsn1d837f9e2648",
-          "x-rapidapi-host": "tasty.p.rapidapi.com",
-        },
-      };
-      const res = await fetch(
-        "https://tasty.p.rapidapi.com/recipes/list?from=0&tags=" +
-          searchQuery,
-        options
-      );
+      const options = recipeOptions;
+      const res = await fetch(recipe_url + searchQuery, options);
       const data = await res.json();
       setRecipes(data);
     } catch (error) {
@@ -33,13 +24,18 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchRecipes("chicken");
+    fetchRecipes("salad");
   }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchRecipes(e.target[0].value);
+  };
 
   return (
     <div className="bg-[#faf9fb] p-10 flex-1">
       <div className="max-w-screen-lg mx-auto">
-        <form>
+        <form onSubmit={handleSearch}>
           <label className="input shadow-md flex items-center gap-2">
             <Search size={"24"} />
             <input
@@ -58,7 +54,9 @@ const HomePage = () => {
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {!loading &&
             recipes.results.map((recipe, index) => {
-              return <RecipeCard key={index} recipe={recipe} />;
+              return (
+                <RecipeCard key={index} recipe={recipe} {...getRandomColor()} />
+              );
             })}
           {loading &&
             [...Array(9)].map((_, index) => {
